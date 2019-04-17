@@ -12,38 +12,42 @@ import javax.persistence.Id;
 
 @Entity
 public class Movie {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String name;
+    private String name;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> actors = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> actors = new ArrayList<>();
 
-	/**
-	 * Required by JPA.
-	 */
-	protected Movie() {
-	}
+    /**
+     * Required by JPA.
+     */
+    protected Movie() {
+    }
 
-	public Movie(String name) {
-		this.name = name;
-	}
+    public Movie(String name) {
+        this.name = name;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public List<String> getActors() {
-		return actors;
-	}
+    public List<String> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<String> actors) {
+        this.actors = actors;
+    }
 }

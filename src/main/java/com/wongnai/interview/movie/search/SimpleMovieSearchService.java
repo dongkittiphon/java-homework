@@ -22,12 +22,13 @@ public class SimpleMovieSearchService implements MovieSearchService {
         //TODO: Step 2 => Implement this method by using data from MovieDataService
         // All test in SimpleMovieSearchServiceIntegrationTest must pass.
         // Please do not change @Component annotation on this class
-        MoviesResponse movie = movieDataService.fetchAll();
+        MoviesResponse movies = movieDataService.fetchAll();
         List<Movie> result = new ArrayList<>();
-        for (MovieData m : movie) {
-            for (String w : m.getTitle().split("\\s+")) {
-                if (w.equals(queryText)) {
-                    Movie matched = new Movie(w);
+        for (MovieData movie : movies) {
+            for (String word : movie.getTitle().split("\\s+")) {
+                if (word.toLowerCase().equals(queryText.toLowerCase())) {
+                    Movie matched = new Movie(movie.getTitle());
+                    matched.setActors(movie.getCast());
                     result.add(matched);
                 }
             }
