@@ -11,28 +11,28 @@ import java.net.URL;
 
 @Component
 public class MovieDataServiceImpl implements MovieDataService {
-	public static final String MOVIE_DATA_URL
-			= "https://raw.githubusercontent.com/prust/wikipedia-movie-data/master/movies.json";
+    public static final String MOVIE_DATA_URL
+            = "https://raw.githubusercontent.com/prust/wikipedia-movie-data/master/movies.json";
 
-	@Autowired
-	private RestOperations restTemplate;
+    @Autowired
+    private RestOperations restTemplate;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	@Override
-	public MoviesResponse fetchAll() {
-		//TODO:
-		// Step 1 => Implement this method to download data from MOVIE_DATA_URL and fix any error you may found.
-		// Please noted that you must only read data remotely and only from given source,
-		// do not download and use local file or put the file anywhere else.
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-            MoviesResponse movies = mapper.readValue(new URL(MOVIE_DATA_URL), MoviesResponse.class);
-            return movies;
-		}catch (IOException e){
-			e.printStackTrace();
-		}
-		return null;
-	}
+    @Override
+    public MoviesResponse fetchAll() {
+        //TODO:
+        // Step 1 => Implement this method to download data from MOVIE_DATA_URL and fix any error you may found.
+        // Please noted that you must only read data remotely and only from given source,
+        // do not download and use local file or put the file anywhere else.
+        MoviesResponse movies = null;
+        String result = restTemplate.getForObject(MOVIE_DATA_URL, String.class);
+        try {
+            movies = objectMapper.readValue(result, MoviesResponse.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return movies;
+    }
 }
