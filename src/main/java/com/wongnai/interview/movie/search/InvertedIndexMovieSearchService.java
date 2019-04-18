@@ -1,7 +1,11 @@
 package com.wongnai.interview.movie.search;
 
-import java.util.List;
+import java.security.Key;
+import java.util.*;
 
+import com.wongnai.interview.movie.external.MovieData;
+import com.wongnai.interview.movie.external.MovieDataService;
+import com.wongnai.interview.movie.external.MoviesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -35,6 +39,43 @@ public class InvertedIndexMovieSearchService implements MovieSearchService {
 		// you have to return can be union or intersection of those 2 sets of ids.
 		// By the way, in this assignment, you must use intersection so that it left for just movie id 5.
 
-		return null;
+		// Building Index
+		List<Movie> movies = movieRepository.getAllMovies();
+		HashMap<String, HashSet<Long>> index = new HashMap<String, HashSet<Long>>();
+		for (int i = 0; i < movies.size(); i++) {
+			String[] words = movies.get(i).getName().split("\\W+");
+			for (String word:words){
+				word = word.toLowerCase();
+				if (!index.containsKey(word)){
+					index.put(word, new HashSet<Long>());
+				}
+				index.get(word).add(movies.get(i).getId());
+			}
+		}
+		// Print index map
+//		for (Map.Entry<String, HashSet<Long>> entry : index.entrySet()){
+//			String key = entry.getKey();
+//			HashSet<Long> values = entry.getValue();
+//			System.out.println("Key = " + key);
+//			System.out.println("Values = " + values + "n");
+//		}
+
+		// Search
+		String[] words = queryText.split("\\s+");
+		HashSet<Movie> tmp = new HashSet<Movie>();
+		for (String word :words){
+			word = word.toLowerCase();
+			for (Map.Entry<String, HashSet<Long>> entry : index.entrySet()){
+				String key = entry.getKey();
+				HashSet<Long> values = entry.getValue();
+				if (word.equals(key)){
+					for (Long id :values){
+						tmp.add(movies.get(id.intValue()));
+					}
+				}
+			}
+		}
+		List<Movie> result = new ArrayList<Movie>(tmp);
+		return result;
 	}
 }
